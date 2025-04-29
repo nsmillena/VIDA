@@ -1,13 +1,29 @@
 import { Routes, Route } from 'react-router-dom';
+import PublicLayout from './layouts/PublicLayout';
+import PrivateLayout from './layouts/PrivateLayout';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import PrivateRoute from './routes/PrivateRoute';
 
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-800">
-      <Routes>
-        <Route path="/" element={<h1 className="text-3xl font-bold">Bem-vindo ao VIDA! 🚀</h1>} />
-        {/* Outras rotas serão adicionadas aqui depois */}
-      </Routes>
-    </div>
+    <Routes>
+      {/*Público*/}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Route>
+
+      {/*Privado*/}
+      <Route element={<PrivateRoute />}>
+        <Route element={<PrivateLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 }
 
