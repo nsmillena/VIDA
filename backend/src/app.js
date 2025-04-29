@@ -1,13 +1,13 @@
-require('dotenv').config(); // Carrega variáveis do .env
 const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
+
 const app = express();
 
-// Middleware para interpretar JSON
+app.use(cors());
 app.use(express.json());
 
-// Rota de teste
-app.get('/', (req, res) => {
-  res.send('V.I.D.A Backend Rodando 🚀');
-});
+// Rotas
+app.use('/api/auth', require('./routes/auth.routes'));
 
 module.exports = app;
