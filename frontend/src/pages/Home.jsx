@@ -1,10 +1,11 @@
-function Home() {
-    return (
-        <div className="text-center mt-20">
-            <h1 className="text-4xl font-bold">Bem-vindo ao Projeto VIDA 🚀</h1>
-            <p className="mt-4 text-gray-600">Organize sua vida com inteligência artificial.</p>
-        </div>
-    );
-}
+import Header from "@/components/Header";
+import HomeHero from "@/components/HomeHero";
 
-export default Home;
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b]">
+      <Header />
+      <HomeHero />
+    </main>
+  );
+}
