@@ -1,7 +1,66 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { FaApple } from 'react-icons/fa';
 
 function Register() {
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    confirmPassword: '',
+    captchaChecked: false,
+  });
+
+  const [error, setError] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm({ ...form, [name]: type === 'checkbox' ? checked : value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (!form.captchaChecked) {
+      setError('Por favor, confirme que você não é um robô.');
+      return;
+    }
+
+    if (form.password !== form.confirmPassword) {
+      setError('As senhas não coincidem.');
+      return;
+    }
+
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          password: form.password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Erro ao registrar');
+      }
+
+      localStorage.setItem('token', data.token); // salva token (opcional)
+      navigate('/dashboard'); // redireciona após sucesso
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="flex min-h-screen">
       <div className="flex flex-col justify-center items-center w-1/2 p-10">
@@ -9,40 +68,41 @@ function Register() {
           <h1 className="text-3xl font-bold text-gray-900">Crie sua conta</h1>
           <p className="text-gray-600">Preencha os dados para começar a usar o V.I.D.A.</p>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700">Nome completo</label>
-              <input type="text" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input type="text" name='name' value={form.name} onChange={handleChange} className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700">E-mail</label>
-              <input type="email" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input type="email" name='email' value={form.email} onChange={handleChange} className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700">Telefone</label>
-              <input type="tel" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input type="tel" name='phone' value={form.phone} onChange={handleChange} className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700">Senha</label>
-              <input type="password" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input type="password" name='password' value={form.password} onChange={handleChange} className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700">Confirmar senha</label>
-              <input type="password" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input type="password" name='confirmPassword' value={form.confirmPassword} onChange={handleChange} className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div className="flex items-center space-x-2">
-              <input type="checkbox" id="captcha" className="w-4 h-4" />
+              <input type="checkbox" name='captchaChecked' checked={form.captchaChecked} onChange={handleChange} id="captcha" className="w-4 h-4" />
               <label htmlFor="captcha" className="text-sm text-gray-700">Não sou um robô</label>
             </div>
 
             <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
               Criar conta
             </button>
+            {error && <p className="text-red-500 text-sm text-center">{error}</p>}
           </form>
 
           <div className="flex items-center my-4">
