@@ -6,7 +6,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="w-full px-6 py-8 text-white">
+    <header className="max-w-[1300px] mx-auto px-4 py-8 text-white">
       <div className="max-w-[1300px] mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="text-xl font-bold flex items-center gap-1">

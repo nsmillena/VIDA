@@ -18,8 +18,7 @@ export default function HomeHero() {
   ];
 
   return (
-    <section className="min-h-[70vh] pt-24 flex flex-col items-center text-center text-white px-4">
-      {/* Card com LED e foguete */}
+    <section className="max-w-[1300px] mx-auto px-4 pt-24 flex flex-col items-center text-center text-white">
       <div className="relative mb-6">
         <div className="relative px-6 py-2 rounded-full text-base flex items-center gap-2 text-white z-10 border border-white/20 bg-white/10 backdrop-blur-sm overflow-hidden">
           <span className="z-10">IA para produtividade e bem-estar</span>
@@ -30,7 +29,6 @@ export default function HomeHero() {
         </div>
       </div>
 
-      {/* Headline com palavras em destaque */}
       <h1 className="text-4xl md:text-5xl font-semibold leading-tight max-w-[900px]">
         Organize Completamente sua{" "}
         <span className="bg-gradient-to-r from-[#3b82f6] to-[#60a5fa] text-transparent bg-clip-text">
@@ -53,11 +51,11 @@ export default function HomeHero() {
       <div className="mt-10 w-full">
         <div className="text-center mb-6">
           <p className=" text-white/80 text-sm md:text-base">
-            O V.I.D.A organiza sua vida em diversas áreas
+            O V.I.D.A organiza sua vida em diversas áreas:
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-10 px-4 max-w-6xl mx-auto">
+        <div className="flex flex-wrap justify-center gap-12 px-4 max-w-[1300px]">
           {features.map((feature, index) => (
             <span
               key={index}
@@ -70,7 +68,6 @@ export default function HomeHero() {
         </div>
       </div>
 
-      {/* Keyframes para o efeito LED e spin */}
       <style jsx>{`
         @keyframes led-move {
           0% {
