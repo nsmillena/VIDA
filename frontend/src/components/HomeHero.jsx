@@ -1,7 +1,22 @@
 import { Rocket } from "lucide-react";
 import CtaButton from "@/components/ui/CtaButton";
+import {
+  Book,
+  DollarSign,
+  HeartPulse,
+  Brain,
+  CheckCircle,
+} from "lucide-react";
 
 export default function HomeHero() {
+  const features = [
+    { label: "Estudos", icon: <Book size={20} /> },
+    { label: "Finanças", icon: <DollarSign size={20} /> },
+    { label: "Saúde física", icon: <HeartPulse size={20} /> },
+    { label: "Saúde mental", icon: <Brain size={20} /> },
+    { label: "Tarefas Diárias", icon: <CheckCircle size={20} /> },
+  ];
+
   return (
     <section className="min-h-[70vh] pt-24 flex flex-col items-center text-center text-white px-4">
       {/* Card com LED e foguete */}
@@ -27,13 +42,32 @@ export default function HomeHero() {
         </span>
       </h1>
 
-      {/* Descrição */}
       <p className="mt-4 text-white/80 max-w-xl text-sm md:text-base">
         Automatize tarefas, cuide da sua saúde e alcance seus objetivos com ajuda da IA do V.I.D.A.
       </p>
 
       <div className="mt-6">
         <CtaButton />
+      </div>
+
+      <div className="mt-10 w-full">
+        <div className="text-center mb-6">
+          <p className=" text-white/80 text-sm md:text-base">
+            O V.I.D.A organiza sua vida em diversas áreas
+          </p>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-10 px-4 max-w-6xl mx-auto">
+          {features.map((feature, index) => (
+            <span
+              key={index}
+              className="flex items-center gap-2 text-lg md:text-xl font-semibold text-white/80 hover:text-white transition"
+            >
+              {feature.icon}
+              {feature.label}
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* Keyframes para o efeito LED e spin */}
