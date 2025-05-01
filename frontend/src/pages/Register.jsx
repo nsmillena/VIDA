@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/useAuth';
 import { FcGoogle } from 'react-icons/fc';
 import { FaApple } from 'react-icons/fa';
 
 function Register() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [form, setForm] = useState({
     name: '',
@@ -14,7 +16,6 @@ function Register() {
     confirmPassword: '',
     captchaChecked: false,
   });
-
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
@@ -26,15 +27,8 @@ function Register() {
     e.preventDefault();
     setError('');
 
-    if (!form.captchaChecked) {
-      setError('Por favor, confirme que você não é um robô.');
-      return;
-    }
-
-    if (form.password !== form.confirmPassword) {
-      setError('As senhas não coincidem.');
-      return;
-    }
+    if (!form.captchaChecked) return setError('Por favor, confirme que você não é um robô.');
+    if (form.password !== form.confirmPassword) return setError('As senhas não coincidem.');
 
     try {
       const res = await fetch('http://localhost:5000/api/auth/register', {
@@ -50,13 +44,14 @@ function Register() {
 
       const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.message || 'Erro ao registrar');
-      }
+      if (!res.ok) throw new Error(data.message || 'Erro ao registrar');
 
-      localStorage.setItem('token', data.token); // salva token (opcional)
-      navigate('/dashboard'); // redireciona após sucesso
+      console.log('[REGISTER] Registro bem-sucedido. Dados:', data);
+      localStorage.setItem('token', data.token);
+      login(data.user); // Salva no contexto
+      navigate('/dashboard');
     } catch (err) {
+      console.error('[REGISTER] Erro ao registrar:', err.message);
       setError(err.message);
     }
   };

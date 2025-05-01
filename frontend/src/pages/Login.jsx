@@ -1,16 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/useAuth';
 import { FcGoogle } from 'react-icons/fc';
 import { FaApple } from 'react-icons/fa';
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const [form, setForm] = useState({
-    email: '',
-    password: '',
-  });
-
+  const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
@@ -31,13 +29,14 @@ function Login() {
 
       const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.message || 'Erro ao fazer login');
-      }
+      if (!res.ok) throw new Error(data.message || 'Erro ao fazer login');
 
+      console.log('[LOGIN] Login bem-sucedido. Dados recebidos:', data);
       localStorage.setItem('token', data.token);
+      login(data.user); // Salva no contexto
       navigate('/dashboard');
     } catch (err) {
+      console.error('[LOGIN] Erro no login:', err.message);
       setError(err.message);
     }
   };
