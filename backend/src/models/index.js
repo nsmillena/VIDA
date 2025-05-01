@@ -1,9 +1,9 @@
     
 const User = require('./User');
-const Financeiro = require('./Financeiro');
-const Estudo = require('./Estudo');
-const Saude = require('./Saude');
-const PequenaTarefa = require('./PequenaTarefa');
+const Financeiro = require('./Finance');
+const Estudo = require('./Study');
+const Saude = require('./Health');
+const PequenaTarefa = require('./Tasks');
 
 User.hasMany(Financeiro, { foreignKey: 'usuarioId' });
 Financeiro.belongsTo(User, { foreignKey: 'usuarioId' });
