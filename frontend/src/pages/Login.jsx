@@ -27,7 +27,9 @@ function Login() {
         body: JSON.stringify(form),
       });
 
+      console.log('[DEBUG] Status da resposta:', res.status); // Mostra status HTTP
       const data = await res.json();
+      console.log('[DEBUG] Corpo da resposta:', data); // Mostra o conteúdo da resposta
 
       if (!res.ok) throw new Error(data.message || 'Erro ao fazer login');
 

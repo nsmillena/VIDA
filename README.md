@@ -1,21 +1,28 @@
-#   V.I.D.A. - Vetor Inteligente de Decisão Assistida
+# V.I.D.A. - Vetor Inteligente de Decisão Assistida
+
+> V.I.D.A. é um sistema inteligente de auto-organização assistida, com IA para otimizar decisões rotineiras em áreas como finanças, saúde, estudos e tarefas diárias.
 
 <p align="center">
-    <img src="logo.png" alt="VIDA Logo" width="400">
+  <img width="200"  src ="https://upload.wikimedia.org/wikipedia/commons/f/f1/Vitejs-logo.svg" alt="VIDA Logo">
 </p>
 
 <p align="center">
-    <a href="https://github.com/andreiolicar/VIDA/graphs/contributors">
-        <img src="https://img.shields.io/github/contributors/andreiolicar/VIDA?color=0FC2C0&logo=github&style=flat-square"
-            alt="GitHub Contributors">
-    </a>
-    <a href="https://github.com/andreiolicar/VIDA/graphs/stargazers">
-        <img src="https://img.shields.io/github/stars/andreiolicar/VIDA?color=0FC2C0&logo=github&style=flat-square" alt="GitHub Stars">
-    </a>
-    <a href="https://github.com/andreiolicar/VIDA/graphs/forks">
-        <img src="https://img.shields.io/github/forks/andreiolicar/VIDA?color=0FC2C0&logo=github&style=flat-square" alt="GitHub Forks">
-    </a>
+  <a href="https://github.com/andreiolicar/VIDA/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/andreiolicar/VIDA?color=0FC2C0&logo=github&style=flat-square" alt="GitHub Contributors">
+  </a>
+  <a href="https://github.com/andreiolicar/VIDA/stargazers">
+    <img src="https://img.shields.io/github/stars/andreiolicar/VIDA?color=0FC2C0&logo=github&style=flat-square" alt="GitHub Stars">
+  </a>
+  <a href="https://github.com/andreiolicar/VIDA/network/members">
+    <img src="https://img.shields.io/github/forks/andreiolicar/VIDA?color=0FC2C0&logo=github&style=flat-square" alt="GitHub Forks">
+  </a>
 </p>
+
+##  Estrutura do Projeto
+
+- **Backend**: API REST com Node.js, Express e MySQL
+- **Frontend**: Interface web com React e Tailwind CSS
+- **Documentação**: # Documentação técnica e de arquitetura dentro do docs
 
 ##   Visão Geral do Projeto
 

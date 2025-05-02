@@ -10,5 +10,6 @@ app.use(express.json());
 // Rotas
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/user', require('./routes/user.routes'));
+app.use('/api/study-routes', require('./routes/studyRoutes'));
 
 module.exports = app;

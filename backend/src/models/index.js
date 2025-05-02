@@ -1,26 +1,17 @@
-    
-const User = require('./User');
-const Financeiro = require('./Finance');
-const Estudo = require('./Study');
-const Saude = require('./Health');
-const PequenaTarefa = require('./Tasks');
+const Sequelize = require('sequelize');
+const sequelize = require('../config/database');
 
-User.hasMany(Financeiro, { foreignKey: 'usuarioId' });
-Financeiro.belongsTo(User, { foreignKey: 'usuarioId' });
+const db = {};
 
-User.hasMany(Estudo, { foreignKey: 'usuarioId' });
-Estudo.belongsTo(User, { foreignKey: 'usuarioId' });
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
 
-User.hasMany(Saude, { foreignKey: 'usuarioId' });
-Saude.belongsTo(User, { foreignKey: 'usuarioId' });
+db.User = require('./User')(sequelize, Sequelize.DataTypes);
+db.StudyRoute = require('./StudyRoute')(sequelize, Sequelize.DataTypes);
+db.StudyTopic = require('./StudyTopics')(sequelize, Sequelize.DataTypes);
 
-User.hasMany(PequenaTarefa, { foreignKey: 'usuarioId' });
-PequenaTarefa.belongsTo(User, { foreignKey: 'usuarioId' });
+if (db.User.associate) db.User.associate(db);
+if (db.StudyRoute.associate) db.StudyRoute.associate(db);
+if (db.StudyTopic.associate) db.StudyTopic.associate(db);
 
-module.exports = {
-  User,
-  Financeiro,
-  Estudo,
-  Saude,
-  PequenaTarefa,
-};
+module.exports = db;
