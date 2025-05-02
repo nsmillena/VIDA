@@ -3,31 +3,35 @@ import { AuthContext } from './AuthContext';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true); // 👈
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser) {
-      console.log('[AUTH CONTEXT] Usuário carregado do localStorage:', storedUser);
+    const storedToken = localStorage.getItem('token');
+
+    if (storedUser && storedToken) {
       setUser(storedUser);
-    } else {
-      console.log('[AUTH CONTEXT] Nenhum usuário encontrado no localStorage.');
+      setToken(storedToken);
     }
+
+    setLoading(false); // 👈 fim do carregamento
   }, []);
 
   const login = (userData) => {
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
-    console.log('[AUTH CONTEXT] Login realizado:', userData);
   };
 
   const logout = () => {
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
     setUser(null);
-    console.log('[AUTH CONTEXT] Logout realizado.');
+    setToken(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
