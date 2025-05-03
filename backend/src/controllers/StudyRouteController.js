@@ -8,8 +8,8 @@ module.exports = {
     const { title, area, description, topics } = req.body;
     const userId = req.user.id;
 
-    if (!topics || topics.length < 3) {
-      return res.status(400).json({ message: 'Informe ao menos 3 tópicos.' });
+    if (!title || !area || !description) {
+      return res.status(400).json({ message: 'Preencha todos os campos obrigatórios.' });
     }
 
     const prompt = `
@@ -43,7 +43,7 @@ Organize por ordem lógica e progressiva.
       res.status(201).json({ route: newRoute });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Erro ao criar rota de estudo' });
+      console.error('Erro OpenAI ou banco:', error.response?.data || error.message);
     }
   },
 
