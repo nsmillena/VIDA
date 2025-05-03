@@ -7,6 +7,8 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import DashboardProfile from './pages/DashboardProfile';
 import PrivateRoute from './routes/PrivateRoute';
+import DashboardStudy from './pages/DashboardStudy'
+import NewStudyRouteForm from './pages/NewStudyRouteForm'
 
 function App() {
   return (
@@ -23,6 +25,10 @@ function App() {
         <Route element={<PrivateLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/profile" element={<DashboardProfile />} />
+
+          {/* Novas rotas para Trilhas de Estudos */}
+          <Route path="/dashboard/study" element={<DashboardStudy />} />
+          <Route path="/dashboard/study/new" element={<NewStudyRouteForm />} />
         </Route>
       </Route>
     </Routes>
