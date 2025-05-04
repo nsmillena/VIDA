@@ -1,3 +1,3 @@
 // backend/sequelize.config.js
-const config = require('./src/config/config');
+const config = require('./config/config');
 module.exports = config;
