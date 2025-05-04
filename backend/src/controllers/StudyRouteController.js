@@ -9,7 +9,6 @@ module.exports = {
       return res.status(400).json({ message: 'Preencha todos os campos obrigatórios e adicione ao menos um tópico.' });
     }
 
-    // Gerar roadmap simples com base nos tópicos
     const roadmap = topics.map((topic, index) => 
       `Etapa ${index + 1}: ${topic}\n- Estude o tópico "${topic}" com atenção.\n- Marcável como concluída.\n`
     ).join('\n');

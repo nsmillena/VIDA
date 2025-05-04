@@ -12,7 +12,7 @@ export default function DashboardStudy() {
   useEffect(() => {
     const fetchRoutes = async () => {
       try {
-        const res = await axios.get('/study')
+        const res = await axios.get('/study-routes')
         setRoutes(res.data)
       } catch (err) {
         console.error('Erro ao buscar trilhas:', err)
