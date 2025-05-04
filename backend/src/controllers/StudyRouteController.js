@@ -1,40 +1,20 @@
 const { StudyRoute, StudyTopic } = require('../models');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 module.exports = {
   createRoute: async (req, res) => {
     const { title, area, description, topics } = req.body;
     const userId = req.user.id;
 
-    if (!title || !area || !description) {
-      return res.status(400).json({ message: 'Preencha todos os campos obrigatórios.' });
+    if (!title || !area || !description || !topics || topics.length === 0) {
+      return res.status(400).json({ message: 'Preencha todos os campos obrigatórios e adicione ao menos um tópico.' });
     }
 
-    const prompt = `
-Crie uma trilha de estudos com base nas seguintes informações:
-
-Título: ${title}
-Área: ${area}
-Descrição: ${description}
-Tópicos: ${topics.join(', ')}
-
-Formato:
-- Título da Etapa
-- Descrição da Etapa
-- Marcável como concluída
-Organize por ordem lógica e progressiva.
-    `;
+    // Gerar roadmap simples com base nos tópicos
+    const roadmap = topics.map((topic, index) => 
+      `Etapa ${index + 1}: ${topic}\n- Estude o tópico "${topic}" com atenção.\n- Marcável como concluída.\n`
+    ).join('\n');
 
     try {
-      console.log('Enviando prompt para Gemini...');
-      const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const roadmap = response.text();
-
       const newRoute = await StudyRoute.create({ title, area, description, roadmap, userId });
 
       const topicEntries = topics.map(t => ({ title: t, routeId: newRoute.id }));
@@ -42,11 +22,8 @@ Organize por ordem lógica e progressiva.
 
       res.status(201).json({ route: newRoute });
     } catch (error) {
-      console.error('Erro ao gerar com Gemini:', error);
-      res.status(500).json({
-        message: 'Erro ao gerar a trilha de estudos com Gemini.',
-        error: error.message,
-      });
+      console.error('Erro ao criar trilha de estudos:', error);
+      res.status(500).json({ message: 'Erro ao criar a trilha de estudos.', error: error.message });
     }
   },
 
