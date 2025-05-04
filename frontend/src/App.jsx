@@ -10,6 +10,8 @@ import PrivateRoute from './routes/PrivateRoute';
 import DashboardStudy from './pages/DashboardStudy'
 import NewStudyRouteForm from './pages/NewStudyRouteForm'
 import DashboardStudyDetail from './pages/DashboardStudyDetail'
+import DashboardEventDetail from './pages/DashboardEventDetail';
+import NewEvent from '@/pages/NewEvent';
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
           <Route path="/dashboard/study" element={<DashboardStudy />} />
           <Route path="/dashboard/study/new" element={<NewStudyRouteForm />} />
           <Route path="/dashboard/study/:id" element={<DashboardStudyDetail />} />
+          <Route path="/dashboard/events/new" element={<NewEvent />} />
+          <Route path="/dashboard/events/:id" element={<DashboardEventDetail />} />
         </Route>
       </Route>
     </Routes>
