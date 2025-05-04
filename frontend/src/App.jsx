@@ -17,6 +17,9 @@ function App() {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path='*' element={
+          <h1>404</h1>
+        }></Route>
         <Route path="/register" element={<Register />} />
       </Route>
 

@@ -1,7 +1,7 @@
 const { StudyRoute, StudyTopic } = require('../models');
-const { OpenAI } = require('openai');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 module.exports = {
   createRoute: async (req, res) => {
@@ -20,7 +20,7 @@ Título: ${title}
 Descrição: ${description}
 Tópicos: ${topics.join(', ')}
 
-Formato: 
+Formato:
 - Título da Etapa
 - Descrição da Etapa
 - Marcável como concluída
@@ -28,12 +28,12 @@ Organize por ordem lógica e progressiva.
     `;
 
     try {
-      const aiResponse = await openai.createChatCompletion({
-        model: 'gpt-4',
-        messages: [{ role: 'user', content: prompt }],
-      });
+      console.log('Enviando prompt para Gemini...');
+      const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
-      const roadmap = aiResponse.data.choices[0].message.content;
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const roadmap = response.text();
 
       const newRoute = await StudyRoute.create({ title, area, description, roadmap, userId });
 
@@ -42,8 +42,11 @@ Organize por ordem lógica e progressiva.
 
       res.status(201).json({ route: newRoute });
     } catch (error) {
-      console.error(error);
-      console.error('Erro OpenAI ou banco:', error.response?.data || error.message);
+      console.error('Erro ao gerar com Gemini:', error);
+      res.status(500).json({
+        message: 'Erro ao gerar a trilha de estudos com Gemini.',
+        error: error.message,
+      });
     }
   },
 

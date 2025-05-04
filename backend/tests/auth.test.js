@@ -37,7 +37,7 @@ describe('Auth API', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty('token');
 
-    token = res.body.token; // salvar token para próximo teste
+    token = res.body.token;
   });
 
   it('deve acessar a rota protegida /me com JWT', async () => {
