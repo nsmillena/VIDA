@@ -9,6 +9,7 @@ import DashboardProfile from './pages/DashboardProfile';
 import PrivateRoute from './routes/PrivateRoute';
 import DashboardStudy from './pages/DashboardStudy'
 import NewStudyRouteForm from './pages/NewStudyRouteForm'
+import DashboardStudyDetail from './pages/DashboardStudyDetail'
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           {/* Novas rotas para Trilhas de Estudos */}
           <Route path="/dashboard/study" element={<DashboardStudy />} />
           <Route path="/dashboard/study/new" element={<NewStudyRouteForm />} />
+          <Route path="/dashboard/study/:id" element={<DashboardStudyDetail />} />
         </Route>
       </Route>
     </Routes>

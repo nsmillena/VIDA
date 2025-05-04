@@ -9,17 +9,46 @@ import DashboardRightPanel from '@/components/dashboard/DashboardRightPanel'
 export default function DashboardStudy() {
   const [routes, setRoutes] = useState([])
 
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      try {
-        const res = await axios.get('/study-routes')
-        setRoutes(res.data)
-      } catch (err) {
-        console.error('Erro ao buscar trilhas:', err)
-      }
+  // Busca as trilhas do backend
+  const fetchRoutes = async () => {
+    try {
+      const res = await axios.get('/study-routes')
+      setRoutes(res.data)
+    } catch (err) {
+      console.error('Erro ao buscar trilhas:', err)
     }
+  }
+
+  useEffect(() => {
     fetchRoutes()
   }, [])
+
+  // Excluir trilha
+  const handleDeleteRoute = async (route) => {
+    if (window.confirm(`Tem certeza que deseja excluir a trilha "${route.title}"?`)) {
+      try {
+        await axios.delete(`/study-routes/${route.id}`)
+        fetchRoutes()
+      } catch (err) {
+        console.error('Erro ao excluir trilha:', err)
+        alert('Erro ao excluir trilha')
+      }
+    }
+  }
+
+  // Favoritar/desfavoritar trilha
+  const handleToggleFavorite = async (route) => {
+    try {
+      await axios.patch(`/study-routes/${route.id}`, { favorite: !route.favorite })
+      fetchRoutes()
+    } catch (err) {
+      console.error('Erro ao favoritar/desfavoritar trilha:', err)
+      alert('Erro ao favoritar/desfavoritar trilha')
+    }
+  }
+
+  // Ordena favoritos primeiro
+  const sortedRoutes = [...routes].sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0))
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white">
@@ -37,12 +66,17 @@ export default function DashboardStudy() {
           </Link>
         </div>
 
-        {routes.length === 0 ? (
+        {sortedRoutes.length === 0 ? (
           <p className="text-gray-400 mt-8">Nenhuma trilha cadastrada ainda.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {routes.map((route) => (
-              <StudyRouteCard key={route.id} route={route} />
+            {sortedRoutes.map((route) => (
+              <StudyRouteCard
+                key={route.id}
+                route={route}
+                onDelete={handleDeleteRoute}
+                onToggleFavorite={handleToggleFavorite}
+              />
             ))}
           </div>
         )}

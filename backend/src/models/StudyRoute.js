@@ -5,6 +5,11 @@ module.exports = (sequelize, DataTypes) => {
       area: DataTypes.STRING, // uma das 10 áreas mais estudadas por pessoas que estudam sozinhas
       roadmap: DataTypes.JSON, // roadmap gerado por ia
       userId: DataTypes.INTEGER,
+      favorite: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     });
   
     StudyRoute.associate = (models) => {

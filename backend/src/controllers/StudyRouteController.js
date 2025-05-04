@@ -9,7 +9,7 @@ module.exports = {
       return res.status(400).json({ message: 'Preencha todos os campos obrigatórios e adicione ao menos um tópico.' });
     }
 
-    const roadmap = topics.map((topic, index) => 
+    const roadmap = topics.map((topic, index) =>
       `Etapa ${index + 1}: ${topic}\n- Estude o tópico "${topic}" com atenção.\n- Marcável como concluída.\n`
     ).join('\n');
 
@@ -19,7 +19,9 @@ module.exports = {
       const topicEntries = topics.map(t => ({ title: t, routeId: newRoute.id }));
       await StudyTopic.bulkCreate(topicEntries);
 
-      res.status(201).json({ route: newRoute });
+      const routeWithTopics = await StudyRoute.findByPk(newRoute.id, { include: ['topics'] });
+
+      res.status(201).json({ route: routeWithTopics });
     } catch (error) {
       console.error('Erro ao criar trilha de estudos:', error);
       res.status(500).json({ message: 'Erro ao criar a trilha de estudos.', error: error.message });
@@ -42,20 +44,56 @@ module.exports = {
     res.json(route);
   },
 
-  markTopicCompleted: async (req, res) => {
+  updateTopicCompletion: async (req, res) => {
     const { id } = req.params;
+    const { completed } = req.body;
 
     try {
       const topic = await StudyTopic.findByPk(id);
       if (!topic) return res.status(404).json({ message: 'Tópico não encontrado' });
 
-      topic.completed = true;
+      topic.completed = completed;
       await topic.save();
 
-      res.json({ message: 'Tópico marcado como concluído', topic });
+      res.json({ message: 'Status do tópico atualizado', topic });
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: 'Erro ao marcar tópico como concluído' });
+      res.status(500).json({ message: 'Erro ao atualizar status do tópico' });
+    }
+  },
+
+  updateRoute: async (req, res) => {
+    const { id } = req.params;
+    const { favorite } = req.body;
+
+    try {
+      const route = await StudyRoute.findByPk(id);
+      if (!route) return res.status(404).json({ message: 'Trilha não encontrada' });
+
+      if (typeof favorite === 'boolean') {
+        route.favorite = favorite;
+      }
+
+      await route.save();
+
+      res.json({ message: 'Trilha atualizada', route });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Erro ao atualizar trilha' });
+    }
+  },
+
+  deleteRoute: async (req, res) => {
+    const { id } = req.params;
+    try {
+      // Remove os tópicos associados primeiro (para evitar problemas de FK)
+      await StudyTopic.destroy({ where: { routeId: id } });
+      // Remove a trilha
+      await StudyRoute.destroy({ where: { id } });
+      res.json({ message: 'Trilha excluída com sucesso' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Erro ao excluir trilha' });
     }
   }
 };

@@ -6,6 +6,8 @@ const auth = require('../middleware/auth.middleware');
 router.post('/', auth, StudyRouteController.createRoute);
 router.get('/', auth, StudyRouteController.getAllRoutes);
 router.get('/:id', auth, StudyRouteController.getRouteById);
-router.patch('/topics/:id/complete', auth, StudyRouteController.markTopicCompleted);
+router.patch('/topics/:id', auth, StudyRouteController.updateTopicCompletion);
+router.patch('/:id', auth, StudyRouteController.updateRoute);
+router.delete('/:id', auth, StudyRouteController.deleteRoute);
 
 module.exports = router;
