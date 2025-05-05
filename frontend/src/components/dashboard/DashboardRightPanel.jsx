@@ -7,6 +7,7 @@ import RadioFilterGroup from './RadioFilterGroup';
 import axios from '@/services/axios';
 
 export default function DashboardRightPanel() {
+  const token = localStorage.getItem('token');
   const userId = localStorage.getItem('user');
   const [showCalendars, setShowCalendars] = useState(true);
   const [showCategories, setShowCategories] = useState(true);
@@ -21,7 +22,12 @@ export default function DashboardRightPanel() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const res = await axios.get(`/events/${userId}`);
+        if (!token) return console.log('token não fornecido');
+        const res = await axios.get(`/events/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setEvents(res.data);
       } catch (err) {
         console.error('Erro ao buscar eventos:', err);
@@ -39,7 +45,7 @@ export default function DashboardRightPanel() {
   };
 
   // Filtra eventos conforme categoria selecionada
-  const filteredEvents = events.filter(event => {
+  const filteredEvents = events.filter((event) => {
     if (selectedCategory === 'all') return true;
     // Normaliza strings para comparação segura (remove espaços e case insensitive)
     if (!event.category) return false;
@@ -49,7 +55,7 @@ export default function DashboardRightPanel() {
   // Função para lidar com clique no dia do calendário
   const handleDayClick = (date) => {
     setSelectedDate(date);
-    const filtered = filteredEvents.filter(event => {
+    const filtered = filteredEvents.filter((event) => {
       const eventDate = new Date(event.datetime);
       return (
         eventDate.getFullYear() === date.getFullYear() &&
@@ -73,7 +79,10 @@ export default function DashboardRightPanel() {
   // DEBUG: Exibe categorias e filtro no console
   // Remova após confirmar funcionamento
   console.log('Categoria selecionada:', selectedCategory);
-  console.log('Categorias dos eventos:', events.map(e => e.category));
+  console.log(
+    'Categorias dos eventos:',
+    events.map((e) => e.category),
+  );
   console.log('Eventos filtrados:', filteredEvents);
 
   return (
@@ -103,7 +112,7 @@ export default function DashboardRightPanel() {
           </div>
 
           <ul className="space-y-2 max-h-48 overflow-y-auto">
-            {dayEvents.map(event => (
+            {dayEvents.map((event) => (
               <li
                 key={event.id}
                 className="cursor-pointer p-2 rounded hover:bg-blue-600 transition"

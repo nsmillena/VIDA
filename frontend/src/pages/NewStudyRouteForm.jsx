@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/useAuth';
 import { BadgeCheck, Plus, Trash } from 'lucide-react';
-import Sidebar from '@/components/dashboard/Sidebar'
-import DashboardRightPanel from '@/components/dashboard/DashboardRightPanel'
+import Sidebar from '@/components/dashboard/Sidebar';
+import DashboardRightPanel from '@/components/dashboard/DashboardRightPanel';
+import axios from '../services/axios';
 
 const AREAS = [
   'Programação',
@@ -44,7 +45,14 @@ export default function NewStudyRouteForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!user || !title || !area || !description || topics.length < 3 || topics.some(t => t.trim() === '')) {
+    if (
+      !user ||
+      !title ||
+      !area ||
+      !description ||
+      topics.length < 3 ||
+      topics.some((t) => t.trim() === '')
+    ) {
       setError('Preencha todos os campos e tenha pelo menos 3 tópicos.');
       return;
     }
@@ -53,19 +61,17 @@ export default function NewStudyRouteForm() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/study-routes/${user}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ title, area, description, topics }),
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/study-routes/${user}`, {
+        title,
+        area,
+        description,
+        topics: topics.filter((t) => t.trim() !== ''),
       });
 
-      const data = await response.json();
+      const data = await response.data;
       console.log('API response:', data);
 
-      if (!response.ok) {
+      if (!data) {
         throw new Error(data?.message || 'Erro ao criar rota de estudo.');
       }
 

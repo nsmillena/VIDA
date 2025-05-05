@@ -1,47 +1,84 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const verifyToken = require('../middleware/auth.middleware');
-const { User } = require('../models'); // Import correto
+const verifyToken = require("../middleware/auth.middleware");
+const { User } = require("../models");
+const { updateProfile, getProfile } = require("../controllers/user.controller");
 
-// Buscar perfil
-router.get('/get/:userId', verifyToken, async (req, res) => {
-  try {
-    const user = await User.findByPk(req.params.userId, {
-      attributes: ['id', 'name', 'email', 'phone'],
-    });
+/**
+ * @swagger
+ * /api/user/get/{userId}:
+ *   get:
+ *     summary: Retorna um usuário pelo ID
+ *     tags: [Usuário]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID do usuário
+ *     responses:
+ *       200:
+ *         description: Usuário encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     name:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     phone:
+ *                       type: string
+ *       404:
+ *         description: Usuário não encontrado
+ */
+router.get("/get/:userId", verifyToken, getProfile);
 
-    if (!user) {
-      return res.status(404).json({ message: 'Usuário não encontrado' });
-    }
+/**
+ * @swagger
+ * /api/user/update/{userId}:
+ *   put:
+ *     summary: Atualiza os dados de um usuário
+ *     tags: [Usuário]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do usuário
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Perfil atualizado com sucesso
+ *       404:
+ *         description: Usuário não encontrado
+ */
+router.put("/update/:userId", verifyToken, updateProfile);
 
-    res.json({ user });
-  } catch (error) {
-    console.error('Erro ao buscar usuário:', error);
-    res.status(500).json({ message: 'Erro interno', error: error.message });
-  }
-});
-
-// Atualizar perfil
-router.put('/update/:userId', verifyToken, async (req, res) => {
-  try {
-    const { name, email, phone } = req.body;
-
-    const user = await User.findByPk(req.params.userId);
-    if (!user) {
-      return res.status(404).json({ message: 'Usuário não encontrado' });
-    }
-
-    user.name = name || user.name;
-    user.email = email || user.email;
-    user.phone = phone || user.phone;
-
-    await user.save();
-
-    res.json({ message: 'Perfil atualizado com sucesso', user });
-  } catch (error) {
-    console.error('Erro ao atualizar usuário:', error);
-    res.status(500).json({ message: 'Erro ao atualizar perfil', error: error.message });
-  }
-});
+module.exports = router;
 
 module.exports = router;

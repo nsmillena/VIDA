@@ -1,51 +1,50 @@
-import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import axios from '@/services/axios'
-import Sidebar from '@/components/dashboard/Sidebar'
-import DashboardRightPanel from '@/components/dashboard/DashboardRightPanel'
-import { ArrowLeft } from 'lucide-react'
+import { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import axios from '@/services/axios';
+import Sidebar from '@/components/dashboard/Sidebar';
+import DashboardRightPanel from '@/components/dashboard/DashboardRightPanel';
+import { ArrowLeft } from 'lucide-react';
 
 export default function DashboardStudyDetail() {
-  const { id } = useParams()
-  const [route, setRoute] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [updatingTopicId, setUpdatingTopicId] = useState(null) // Para controlar o loading do tópico sendo atualizado
-
+  const { id } = useParams();
+  const [route, setRoute] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [updatingTopicId, setUpdatingTopicId] = useState(null); // Para controlar o loading do tópico sendo atualizado
   const fetchRoute = async () => {
     try {
-      setLoading(true)
-      const res = await axios.get(`/study-routes/${id}`)
-      setRoute(res.data)
-      setError('')
+      const res = await axios.get(`/study-routes/getone/${id}`);
+
+      setRoute(res.data);
+      setError('');
     } catch (err) {
-      console.error('Erro ao buscar trilha:', err)
-      setError('Erro ao carregar a trilha de estudos.')
+      console.error('Erro ao buscar trilha:', err);
+      setError('Erro ao carregar a trilha de estudos.');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchRoute()
+    fetchRoute();
     // eslint-disable-next-line
-  }, [id])
+  }, [id]);
 
   // Função para marcar/desmarcar tópico como concluído
   const handleToggleTopic = async (topicId, currentStatus) => {
-    setUpdatingTopicId(topicId)
+    setUpdatingTopicId(topicId);
     try {
       await axios.patch(`/study-routes/topics/${topicId}`, {
         completed: !currentStatus,
-      })
-      await fetchRoute() // Atualiza a lista após alteração
+      });
+      await fetchRoute(); // Atualiza a lista após alteração
     } catch (err) {
-      alert('Erro ao atualizar status do tópico.')
-      console.error(err)
+      alert('Erro ao atualizar status do tópico.');
+      console.error(err);
     } finally {
-      setUpdatingTopicId(null)
+      setUpdatingTopicId(null);
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -56,7 +55,7 @@ export default function DashboardStudyDetail() {
         </main>
         <DashboardRightPanel />
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -68,7 +67,7 @@ export default function DashboardStudyDetail() {
         </main>
         <DashboardRightPanel />
       </div>
-    )
+    );
   }
 
   if (!route) {
@@ -80,7 +79,7 @@ export default function DashboardStudyDetail() {
         </main>
         <DashboardRightPanel />
       </div>
-    )
+    );
   }
 
   return (
@@ -112,7 +111,9 @@ export default function DashboardStudyDetail() {
                 <li
                   key={topic.id}
                   className={`p-4 rounded-lg border flex justify-between items-center ${
-                    topic.completed ? 'border-green-500 bg-green-900' : 'border-gray-600 bg-[#111827]'
+                    topic.completed
+                      ? 'border-green-500 bg-green-900'
+                      : 'border-gray-600 bg-[#111827]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -147,5 +148,5 @@ export default function DashboardStudyDetail() {
 
       <DashboardRightPanel />
     </div>
-  )
+  );
 }

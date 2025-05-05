@@ -1,34 +1,36 @@
-import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import axios from '@/services/axios'
-import Sidebar from '@/components/dashboard/Sidebar'
-import DashboardRightPanel from '@/components/dashboard/DashboardRightPanel'
-import { ArrowLeft } from 'lucide-react'
+import { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import axios from '@/services/axios';
+import Sidebar from '@/components/dashboard/Sidebar';
+import DashboardRightPanel from '@/components/dashboard/DashboardRightPanel';
+import { ArrowLeft } from 'lucide-react';
 
 export default function DashboardEventDetail() {
-  const { id } = useParams()
-  const [event, setEvent] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const { id } = useParams();
+  const userId = localStorage.getItem('user');
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const fetchEvent = async () => {
     try {
-      setLoading(true)
-      const res = await axios.get(`/events/${id}`)
-      setEvent(res.data)
-      setError('')
+      setLoading(true);
+      const res = await axios.get(`/events/${userId}/${id}`);
+      setEvent(res.data);
+
+      setError('');
     } catch (err) {
-      console.error('Erro ao buscar evento:', err)
-      setError('Erro ao carregar os detalhes do evento.')
+      console.error('Erro ao buscar evento:', err);
+      setError('Erro ao carregar os detalhes do evento.');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchEvent()
+    fetchEvent();
     // eslint-disable-next-line
-  }, [id])
+  }, [id]);
 
   if (loading) {
     return (
@@ -39,7 +41,7 @@ export default function DashboardEventDetail() {
         </main>
         <DashboardRightPanel />
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -51,7 +53,7 @@ export default function DashboardEventDetail() {
         </main>
         <DashboardRightPanel />
       </div>
-    )
+    );
   }
 
   if (!event) {
@@ -63,20 +65,20 @@ export default function DashboardEventDetail() {
         </main>
         <DashboardRightPanel />
       </div>
-    )
+    );
   }
 
   // Formatar data e hora para exibição
-  const eventDate = new Date(event.datetime)
+  const eventDate = new Date(event.datetime);
   const formattedDate = eventDate.toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
-  })
+  });
   const formattedTime = eventDate.toLocaleTimeString('pt-BR', {
     hour: '2-digit',
     minute: '2-digit',
-  })
+  });
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white">
@@ -121,5 +123,5 @@ export default function DashboardEventDetail() {
 
       <DashboardRightPanel />
     </div>
-  )
+  );
 }

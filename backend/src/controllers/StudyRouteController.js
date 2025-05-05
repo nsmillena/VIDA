@@ -1,33 +1,56 @@
-const nodemailer = require('nodemailer');
-const { StudyRoute, StudyTopic, User } = require('../models');
+const nodemailer = require("nodemailer");
+const { StudyRoute, StudyTopic, User } = require("../models");
 
 module.exports = {
   createRoute: async (req, res) => {
     const { title, area, description, topics } = req.body;
     const userId = req.params.userId;
-   
 
-    if (!userId || !title || !area || !description || !topics || topics.length === 0) {
-      return res.status(400).json({ message: 'Preencha todos os campos obrigatórios e adicione ao menos um tópico.' });
+    if (
+      !userId ||
+      !title ||
+      !area ||
+      !description ||
+      !topics ||
+      topics.length === 0
+    ) {
+      return res.status(400).json({
+        message:
+          "Preencha todos os campos obrigatórios e adicione ao menos um tópico.",
+      });
     }
 
-    const roadmap = topics.map((topic, index) =>
-      `Etapa ${index + 1}: ${topic}\n- Estude o tópico "${topic}" com atenção.\n- Marcável como concluída.\n`
-    ).join('\n');
+    const roadmap = topics
+      .map(
+        (topic, index) =>
+          `Etapa ${
+            index + 1
+          }: ${topic}\n- Estude o tópico "${topic}" com atenção.\n- Marcável como concluída.\n`
+      )
+      .join("\n");
 
     try {
-   
-      const newRoute = await StudyRoute.create({ title, area, description, roadmap, userId });
+      const newRoute = await StudyRoute.create({
+        title,
+        area,
+        description,
+        roadmap,
+        userId,
+      });
 
-      const topicEntries = topics.map(t => ({ title: t, routeId: newRoute.id }));
+      const topicEntries = topics.map((t) => ({
+        title: t,
+        routeId: newRoute.id,
+      }));
       await StudyTopic.bulkCreate(topicEntries);
 
-      
-      const routeWithTopics = await StudyRoute.findByPk(newRoute.id, { include: ['topics'] });
+      const routeWithTopics = await StudyRoute.findByPk(newRoute.id, {
+        include: ["topics"],
+      });
 
-      const user = await User.findByPk(userId);  
+      const user = await User.findByPk(userId);
       const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service: "gmail",
         auth: {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
@@ -36,8 +59,8 @@ module.exports = {
 
       const mailOptions = {
         from: '"Vida Notificações" <vida.app@gmail.com>',
-        to: user.email, 
-        subject: '🎉 Sua nova Rota de Estudo foi criada!',
+        to: user.email,
+        subject: "🎉 Sua nova Rota de Estudo foi criada!",
         html: `
           <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
             <h2 style="color:rgba(1, 40, 184, 0.86);">Olá, ${user.name}!</h2>
@@ -47,7 +70,7 @@ module.exports = {
             <p><strong>Descrição:</strong> ${description}</p>
             <p><strong>Etapas:</strong></p>
             <ul>
-              ${topics.map(topic => `<li>${topic}</li>`).join('')}
+              ${topics.map((topic) => `<li>${topic}</li>`).join("")}
             </ul>
             <p>Explore e estude cada tópico para concluir sua jornada!</p>
             <p>Qualquer dúvida, estamos à disposição.</p>
@@ -56,20 +79,25 @@ module.exports = {
         `,
       };
 
-
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          console.error('Erro ao enviar e-mail de confirmação:', error);
-          return res.status(500).json({ message: 'Erro ao enviar e-mail de confirmação', error: error.message });
+          console.error("Erro ao enviar e-mail de confirmação:", error);
+          return res.status(500).json({
+            message: "Erro ao enviar e-mail de confirmação",
+            error: error.message,
+          });
         } else {
-          console.log('E-mail de confirmação enviado:', info.response);
+          console.log("E-mail de confirmação enviado:", info.response);
         }
       });
 
       res.status(201).json({ route: routeWithTopics });
     } catch (error) {
-      console.error('Erro ao criar trilha de estudos:', error);
-      res.status(500).json({ message: 'Erro ao criar a trilha de estudos.', error: error.message });
+      console.error("Erro ao criar trilha de estudos:", error);
+      res.status(500).json({
+        message: "Erro ao criar a trilha de estudos.",
+        error: error.message,
+      });
     }
   },
 
@@ -77,16 +105,17 @@ module.exports = {
     const userId = req.params.userId;
     const routes = await StudyRoute.findAll({
       where: { userId },
-      include: ['topics'],
+      include: ["topics"],
     });
     res.json(routes);
   },
 
   getRouteById: async (req, res) => {
-    const { id } = req.params;
-    const route = await StudyRoute.findByPk(id, { include: ['topics'] });
-    if (!route) return res.status(404).json({ message: 'Rota não encontrada' });
-    res.json(route);
+    const id = req.params.id;
+    console.log(id);
+    const route = await StudyRoute.findByPk(id, { include: ["topics"] });
+
+    res.status(200).json(route);
   },
 
   updateTopicCompletion: async (req, res) => {
@@ -95,15 +124,16 @@ module.exports = {
 
     try {
       const topic = await StudyTopic.findByPk(id);
-      if (!topic) return res.status(404).json({ message: 'Tópico não encontrado' });
+      if (!topic)
+        return res.status(404).json({ message: "Tópico não encontrado" });
 
       topic.completed = completed;
       await topic.save();
 
-      res.json({ message: 'Status do tópico atualizado', topic });
+      res.json({ message: "Status do tópico atualizado", topic });
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: 'Erro ao atualizar status do tópico' });
+      res.status(500).json({ message: "Erro ao atualizar status do tópico" });
     }
   },
 
@@ -113,32 +143,32 @@ module.exports = {
 
     try {
       const route = await StudyRoute.findByPk(id);
-      if (!route) return res.status(404).json({ message: 'Trilha não encontrada' });
+      if (!route)
+        return res.status(404).json({ message: "Trilha não encontrada" });
 
-      if (typeof favorite === 'boolean') {
+      if (typeof favorite === "boolean") {
         route.favorite = favorite;
       }
 
       await route.save();
 
-      res.json({ message: 'Trilha atualizada', route });
+      res.json({ message: "Trilha atualizada", route });
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: 'Erro ao atualizar trilha' });
+      res.status(500).json({ message: "Erro ao atualizar trilha" });
     }
   },
 
   deleteRoute: async (req, res) => {
     const { id } = req.params;
     try {
-
       await StudyTopic.destroy({ where: { routeId: id } });
 
       await StudyRoute.destroy({ where: { id } });
-      res.json({ message: 'Trilha excluída com sucesso' });
+      res.json({ message: "Trilha excluída com sucesso" });
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: 'Erro ao excluir trilha' });
+      res.status(500).json({ message: "Erro ao excluir trilha" });
     }
-  }
+  },
 };

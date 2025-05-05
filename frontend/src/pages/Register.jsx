@@ -46,9 +46,9 @@ function Register() {
 
       if (!res.ok) throw new Error(data.message || 'Erro ao registrar');
 
-      console.log('[REGISTER] Registro bem-sucedido. Dados:', data);
-      localStorage.setItem('token', data.token);
-      login(data.user); // Salva no contexto
+      console.log('[REGISTER] Registro bem-sucedido. Dados:', data.user);
+      localStorage.setItem('token', data.user.token);
+      login(data.user.id); // Salva no contexto
       navigate('/dashboard');
     } catch (err) {
       console.error('[REGISTER] Erro ao registrar:', err.message);
@@ -114,7 +114,9 @@ function Register() {
             </div>
 
             <div>
-              <label className="block mb-1 text-sm font-medium text-white/80">Confirmar senha</label>
+              <label className="block mb-1 text-sm font-medium text-white/80">
+                Confirmar senha
+              </label>
               <input
                 type="password"
                 name="confirmPassword"
@@ -134,7 +136,9 @@ function Register() {
                 id="captcha"
                 className="w-4 h-4 accent-blue-500"
               />
-              <label htmlFor="captcha" className="text-sm text-white/80">Não sou um robô</label>
+              <label htmlFor="captcha" className="text-sm text-white/80">
+                Não sou um robô
+              </label>
             </div>
 
             <button
@@ -164,7 +168,10 @@ function Register() {
           </div>
 
           <p className="text-center text-sm text-white/60">
-            Já tem uma conta? <a href="/login" className="text-blue-400 hover:underline">Entre agora.</a>
+            Já tem uma conta?{' '}
+            <a href="/login" className="text-blue-400 hover:underline">
+              Entre agora.
+            </a>
           </p>
         </div>
       </div>
@@ -179,9 +186,7 @@ function Register() {
             Cadastre-se e permita que nossa inteligência artificial ajude você a organizar sua vida,
             economizar seu tempo e cuidar do seu bem-estar.
           </p>
-          <p className="text-[#475569] text-sm">
-            Sua nova jornada começa agora.
-          </p>
+          <p className="text-[#475569] text-sm">Sua nova jornada começa agora.</p>
         </div>
       </div>
     </div>
