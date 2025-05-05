@@ -1,9 +1,42 @@
 import { User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/useAuth';
+import { useEffect, useState } from 'react';
 
 export default function UserProfile() {
-  const { user } = useAuth();
+  const userId = localStorage.getItem('user');
+  const token = localStorage.getItem('token');
+  const [user, setUser] = useState({ name: '', email: '' });
+
+  useEffect(() => {
+          async function fetchProfile() {
+              try {
+                  const res = await fetch(`http://localhost:5000/api/user/get/${userId}`, {
+                      headers: {
+                          Authorization: `Bearer ${token}`,
+                      },
+                  });
+  
+                  const data = await res.json();
+  
+                  if (!res.ok || !data.user) throw new Error(data.message || 'Erro ao buscar dados.');
+  
+                  setUser({
+                      name: data.user.name || '',
+                      email: data.user.email || '',
+                  });
+  
+                 
+              } catch (error) {
+                  console.error('[PERFIL] Erro ao carregar perfil:', error);
+                  
+                 
+              }
+          }
+  
+          fetchProfile();
+      }, [token]);
+
 
   return (
     <Link
@@ -14,8 +47,8 @@ export default function UserProfile() {
         <User className="text-white" size={24} />
       </div>
       <div>
-        <h4 className="font-semibold text-sm">{user?.name || 'Usuário'}</h4>
-        <p className="text-xs text-white/60">{user?.email || 'email@email.com'}</p>
+        <h4 className="font-semibold text-sm">{user.name }</h4>
+        <p className="text-xs text-white/60">{user.email}</p>
       </div>
     </Link>
   );

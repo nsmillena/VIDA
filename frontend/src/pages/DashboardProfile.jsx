@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 export default function DashboardProfile() {
+    const userId = localStorage.getItem('user');
     const [form, setForm] = useState({ name: '', email: '', phone: '' });
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function DashboardProfile() {
     useEffect(() => {
         async function fetchProfile() {
             try {
-                const res = await fetch('http://localhost:5000/api/user/me', {
+                const res = await fetch(`http://localhost:5000/api/user/get/${userId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -52,7 +53,7 @@ export default function DashboardProfile() {
         setMessage('');
 
         try {
-            const res = await fetch('http://localhost:5000/api/user/me', {
+            const res = await fetch(`http://localhost:5000/api/user/update/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

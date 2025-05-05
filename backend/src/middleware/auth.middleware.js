@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
-  console.log(authHeader);
+ 
   const [type, token] = authHeader.split(' ');
 
   if (!token) {

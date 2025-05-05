@@ -7,6 +7,7 @@ import { BadgeCheck, Plus, Trash } from 'lucide-react';
 
 export default function NewEvent() {
   const navigate = useNavigate();
+  const userId = localStorage.getItem('user');
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -34,7 +35,7 @@ export default function NewEvent() {
     setLoading(true);
     setError('');
     try {
-      await axios.post('/events', {
+      await axios.post(`/events/${userId}`, {
         title,
         description,
         topics: topics.filter(t => t.trim() !== ''),

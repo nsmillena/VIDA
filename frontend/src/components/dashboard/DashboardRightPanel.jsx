@@ -7,6 +7,7 @@ import RadioFilterGroup from './RadioFilterGroup';
 import axios from '@/services/axios';
 
 export default function DashboardRightPanel() {
+  const userId = localStorage.getItem('user');
   const [showCalendars, setShowCalendars] = useState(true);
   const [showCategories, setShowCategories] = useState(true);
   const [events, setEvents] = useState([]);
@@ -20,8 +21,8 @@ export default function DashboardRightPanel() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        //const res = await axios.get('/events');
-        //setEvents(res.data);
+        const res = await axios.get(`/events/${userId}`);
+        setEvents(res.data);
       } catch (err) {
         console.error('Erro ao buscar eventos:', err);
       }

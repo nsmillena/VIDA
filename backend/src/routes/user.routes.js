@@ -4,9 +4,9 @@ const verifyToken = require('../middleware/auth.middleware');
 const { User } = require('../models'); // Import correto
 
 // Buscar perfil
-router.get('/me', verifyToken, async (req, res) => {
+router.get('/get/:userId', verifyToken, async (req, res) => {
   try {
-    const user = await User.findByPk(req.user.id, {
+    const user = await User.findByPk(req.params.userId, {
       attributes: ['id', 'name', 'email', 'phone'],
     });
 
@@ -22,11 +22,11 @@ router.get('/me', verifyToken, async (req, res) => {
 });
 
 // Atualizar perfil
-router.put('/me', verifyToken, async (req, res) => {
+router.put('/update/:userId', verifyToken, async (req, res) => {
   try {
     const { name, email, phone } = req.body;
 
-    const user = await User.findByPk(req.user.id);
+    const user = await User.findByPk(req.params.userId);
     if (!user) {
       return res.status(404).json({ message: 'Usuário não encontrado' });
     }
