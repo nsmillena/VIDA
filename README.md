@@ -3,7 +3,7 @@
 > V.I.D.A. é um sistema inteligente de auto-organização assistida, com IA para otimizar decisões rotineiras em áreas como finanças, saúde, estudos e tarefas diárias.
 
 <p align="center">
-  <img width="200"  src ="https://upload.wikimedia.org/wikipedia/commons/f/f1/Vitejs-logo.svg" alt="VIDA Logo">
+  <img width="200"  src ="https://logo.svg" alt="VIDA Logo">
 </p>
 
 <p align="center">
@@ -48,36 +48,12 @@ Você encontrará aqui:
 📦 vida/
  ┣ 📂 backend/         → API REST (Node.js, Express, MySQL)
  ┣ 📂 frontend/        → Interface (React, Tailwind CSS)
- ┣ 📂 database/        → Scripts SQL (criação e inserção de dados)
  ┣ 📂 docs/            → Documentação técnica e de arquitetura
  ┗ 📄 README.md        → Documentação principal do projeto
 ```
 
 ---
 
-## Como Executar o Projeto
-
-### Backend
-
-```bash
-# Configure o arquivo .env DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, JWT_SECRET e OPENAI_API_KEY
-cd backend
-npm install
-npx sequelize-cli db:migrate
-npx sequelize-cli db:seed:all
-npm run dev
-```
-
-### Frontend
-
-```bash
-# Configure o arquivo .env com: VITE_API_URL=http://localhost:5000/api
-cd frontend
-npm install
-npm run dev
-```
-
----
 
 ## Stack de Tecnologias
 
@@ -91,10 +67,6 @@ npm run dev
 [![JWT](https://img.shields.io/badge/JWT-0FC2C0?style=for-the-badge&logo=jsonwebtokens&logoColor=0D1117)](https://jwt.io/)
 &nbsp;
 [![Swagger](https://img.shields.io/badge/Swagger-0FC2C0?style=for-the-badge&logo=swagger&logoColor=0D1117)](https://swagger.io/)
-&nbsp;
-[![Jest](https://img.shields.io/badge/Jest-0FC2C0?style=for-the-badge&logo=jest&logoColor=0D1117)](https://jestjs.io/)
-&nbsp;
-[![Supertest](https://img.shields.io/badge/Supertest-0FC2C0?style=for-the-badge&logoColor=white&color=0FC2C0)](https://github.com/visionmedia/supertest)
 &nbsp;
 
 
@@ -118,8 +90,7 @@ npm run dev
 &nbsp;
 [![Axios](https://img.shields.io/badge/Axios-0FC2C0?style=for-the-badge&logo=axios&logoColor=0D1117)](https://axios-http.com/)
 &nbsp;
-[![Fetch API](https://img.shields.io/badge/Fetch_API-0FC2C0?style=for-the-badge&logoColor=white&color=0FC2C0)](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
-&nbsp;
+
 
 ### Utilitários
 
@@ -141,10 +112,6 @@ npm run dev
 A pasta [`/docs`](./docs) contém:
 
 - Especificação completa da API (via Swagger)
-- Diagrama DER do banco MySQL
-- Estrutura de arquivos do sistema
-- Fluxograma de funcionamento
-- Protótipos das telas
 
 ---
 
@@ -158,28 +125,28 @@ A pasta [`/docs`](./docs) contém:
       <a href="https://github.com/andreiolicar">
         <img src="https://avatars.githubusercontent.com/u/166918480?v=4" width="100px;" alt="Andrei"/><br />
         <b>Andrei</b><br />
-        <sub>Backend, Infra</sub>
+        <sub>Sessão de estudos, cadastros, banco de dados e frontend</sub>
       </a>
     </td>
     <td align="center">
       <a href="https://github.com/joaoxaviersilva">
         <img src="https://avatars.githubusercontent.com/u/166918086?v=4" width="100px;" alt="João"/><br />
         <b>João</b><br />
-        <sub>Frontend, Testes</sub>
+        <sub>Backend e frontend de tarefas e finanças</sub>
       </a>
     </td>
     <td align="center">
       <a href="https://github.com/nsmillena">
         <img src="https://avatars.githubusercontent.com/u/166918300?v=4" width="100px;" alt="Millena"/><br />
         <b>Millena</b><br />
-        <sub>Design, Documentação</sub>
+        <sub>Automações por e-mail e banco de dados</sub>
       </a>
     </td>
     <td align="center">
       <a href="https://github.com/sofismoura">
         <img src="https://avatars.githubusercontent.com/u/166918518?s=400&u=76c54fc8d9ef41bfda8dcfada372d9fba0ee8954&v=4" width="100px;" alt="Sofia"/><br />
         <b>Sofia</b><br />
-        <sub>Fullstack, IA</sub>
+        <sub>Sessão de estudos e documentação (Swagger e README)</sub>
       </a>
     </td>
   </tr>
