@@ -7,6 +7,8 @@ import Sidebar from '@/components/dashboard/Sidebar'
 import DashboardRightPanel from '@/components/dashboard/DashboardRightPanel'
 
 export default function DashboardStudy() {
+  const userId = localStorage.getItem('user');
+  
   const [routes, setRoutes] = useState([])
   const [events, setEvents] = useState([])
   const [loadingEvents, setLoadingEvents] = useState(true)
@@ -14,7 +16,7 @@ export default function DashboardStudy() {
 
   const fetchRoutes = async () => {
     try {
-      const res = await axios.get('/study-routes')
+      const res = await axios.get(`/study-routes/${userId}`)
       setRoutes(res.data)
     } catch (err) {
       console.error('Erro ao buscar trilhas:', err)
@@ -23,8 +25,9 @@ export default function DashboardStudy() {
 
   const fetchEvents = async () => {
     try {
+   
       setLoadingEvents(true)
-      const res = await axios.get('/events')
+      const res = await axios.get(`/events/${userId}` )
       setEvents(res.data)
       setErrorEvents('')
     } catch (err) {

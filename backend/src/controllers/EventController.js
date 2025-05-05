@@ -3,7 +3,7 @@ const { Event } = require('../models');
 module.exports = {
     createEvent: async (req, res) => {
         const { title, description, topics, datetime } = req.body;
-        const userId = req.user.id;
+        const userId = req.params.userId;
 
         if (!title || !topics || !datetime) {
             return res.status(400).json({ message: 'Título, tópicos e data/hora são obrigatórios.' });
@@ -25,7 +25,7 @@ module.exports = {
     },
 
     getAllEvents: async (req, res) => {
-        const userId = req.user.id;
+        const userId = req.params.userId;
         try {
             const events = await Event.findAll({
                 where: { userId },

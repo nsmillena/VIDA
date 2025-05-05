@@ -41,19 +41,17 @@ const register = async (req, res) => {
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.error('Erro ao enviar e-mail de boas-vindas:', error);
-            } else {
-                console.log('E-mail de boas-vindas enviado:', info.response);
+                return res.status(500).json({ message: 'Erro ao enviar e-mail de boas-vindas', error: error.message });
             }
+            console.log('E-mail de boas-vindas enviado:', info.response);
         });
+        
 
         res.status(201).json({ message: 'Usuário criado com sucesso', user: { id: user.id, name: user.name } });
     } catch (err) {
         res.status(500).json({ message: 'Erro ao registrar usuário', error: err.message });
     }
 };
-
-module.exports = { register };
 
 
 const login = async (req, res) => {
@@ -68,7 +66,7 @@ const login = async (req, res) => {
 
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '2h' });
 
-        res.json({ token, user: { id: user.id, name: user.name, email: user.email } });
+        res.json({ token:token, user: user.id});
     } catch (err) {
         res.status(500).json({ message: 'Erro ao fazer login', error: err.message });
     }

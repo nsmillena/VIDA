@@ -20,8 +20,8 @@ export default function DashboardRightPanel() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const res = await axios.get('/events');
-        setEvents(res.data);
+        //const res = await axios.get('/events');
+        //setEvents(res.data);
       } catch (err) {
         console.error('Erro ao buscar eventos:', err);
       }

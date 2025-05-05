@@ -3,8 +3,8 @@ const router = express.Router();
 const StudyRouteController = require('../controllers/StudyRouteController');
 const auth = require('../middleware/auth.middleware');
 
-router.post('/', auth, StudyRouteController.createRoute);
-router.get('/', auth, StudyRouteController.getAllRoutes);
+router.post('/:userId', auth, StudyRouteController.createRoute);
+router.get('/:userId', auth, StudyRouteController.getAllRoutes);
 router.get('/:id', auth, StudyRouteController.getRouteById);
 router.patch('/topics/:id', auth, StudyRouteController.updateTopicCompletion);
 router.patch('/:id', auth, StudyRouteController.updateRoute);

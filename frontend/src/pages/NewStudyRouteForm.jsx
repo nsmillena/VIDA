@@ -19,6 +19,7 @@ const AREAS = [
 ];
 
 export default function NewStudyRouteForm() {
+  const user = localStorage.getItem('user');
   const [title, setTitle] = useState('');
   const [area, setArea] = useState('');
   const [description, setDescription] = useState('');
@@ -43,7 +44,7 @@ export default function NewStudyRouteForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title || !area || !description || topics.length < 3 || topics.some(t => t.trim() === '')) {
+    if (!user || !title || !area || !description || topics.length < 3 || topics.some(t => t.trim() === '')) {
       setError('Preencha todos os campos e tenha pelo menos 3 tópicos.');
       return;
     }
@@ -52,7 +53,7 @@ export default function NewStudyRouteForm() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/study-routes`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/study-routes/${user}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
