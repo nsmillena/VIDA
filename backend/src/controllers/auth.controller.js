@@ -8,17 +8,13 @@ const register = async (req, res) => {
     try {
         const { name, email, phone, password } = req.body;
 
-        // Verifica se o usuário já existe
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) return res.status(400).json({ message: 'Usuário já cadastrado' });
 
-        // Criptografa a senha
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Cria o usuário
         const user = await User.create({ name, email, phone, password: hashedPassword });
 
-        // Envia e-mail de boas-vindas
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -30,9 +26,18 @@ const register = async (req, res) => {
         const mailOptions = {
             from: '"Vida Notificações" <vida.app@gmail.com>',
             to: email,
-            subject: 'Bem-vindo à nossa plataforma!',
-            text: `Olá ${name},\n\nObrigado por se cadastrar! Estamos felizes em ter você conosco.`
+            subject: '🎉 Bem-vindo à nossa plataforma!',
+            html: `
+                <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                    <h2 style="color:rgba(10, 37, 136, 0.86);">Olá, ${name}!</h2>
+                    <p>Obrigado por se cadastrar no <strong>VIDA</strong>! Estamos muito felizes em ter você conosco.</p>
+                    <p>Explore nossa plataforma e aproveite todos os recursos que preparamos especialmente para você.</p>
+                    <p style="margin-top: 20px;">Qualquer dúvida, estamos à disposição.</p>
+                    <p>Abraços,<br><strong>Equipe VIDA</strong></p>
+                </div>
+            `
         };
+        
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
@@ -42,7 +47,6 @@ const register = async (req, res) => {
             }
         });
 
-        // Resposta para o front-end
         res.status(201).json({ message: 'Usuário criado com sucesso', user: { id: user.id, name: user.name } });
     } catch (err) {
         res.status(500).json({ message: 'Erro ao registrar usuário', error: err.message });
