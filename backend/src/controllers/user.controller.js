@@ -1,18 +1,18 @@
-const User = require('../models/User');
+const { User } = require('../models');
 
-// Ver perfil
 const getProfile = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
-      attributes: ['id', 'name', 'email', 'phone'] // Exibir apenas esses dados
+      attributes: ['id', 'name', 'email', 'phone'],
     });
-    res.json(user);
+    if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
+    res.json({ user });
   } catch (err) {
+    console.error('Erro ao buscar perfil:', err);
     res.status(500).json({ message: 'Erro ao buscar perfil', error: err.message });
   }
 };
 
-// Atualizar perfil
 const updateProfile = async (req, res) => {
   try {
     const { name, email, phone } = req.body;
@@ -28,6 +28,7 @@ const updateProfile = async (req, res) => {
 
     res.json({ message: 'Perfil atualizado com sucesso', user });
   } catch (err) {
+    console.error('Erro ao atualizar perfil:', err);
     res.status(500).json({ message: 'Erro ao atualizar perfil', error: err.message });
   }
 };

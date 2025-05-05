@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middleware/auth.middleware');
-const User = require('../models/User');
+const { User } = require('../models'); // Import correto
 
 // Buscar perfil
 router.get('/me', verifyToken, async (req, res) => {
@@ -16,6 +16,7 @@ router.get('/me', verifyToken, async (req, res) => {
 
     res.json({ user });
   } catch (error) {
+    console.error('Erro ao buscar usuário:', error);
     res.status(500).json({ message: 'Erro interno', error: error.message });
   }
 });
@@ -38,6 +39,7 @@ router.put('/me', verifyToken, async (req, res) => {
 
     res.json({ message: 'Perfil atualizado com sucesso', user });
   } catch (error) {
+    console.error('Erro ao atualizar usuário:', error);
     res.status(500).json({ message: 'Erro ao atualizar perfil', error: error.message });
   }
 });
